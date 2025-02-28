@@ -4,18 +4,18 @@ const OpenAI = require('openai');
 require('dotenv').config();
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
 
-const API_KEY = '43e026fd-17f5-4a20-b73d-69280cdc1ae8';
-const BOT_ID = 'bot-20250228043007-l4qph';
+const API_KEY = process.env.API_KEY || '43e026fd-17f5-4a20-b73d-69280cdc1ae8';
+const BOT_ID = process.env.BOT_ID || 'bot-20250228043007-l4qph';
 
 // 创建OpenAI客户端实例
 const openai = new OpenAI({
   apiKey: API_KEY,
-  baseURL: 'https://ark.cn-beijing.volces.com/api/v3/bots',
+  baseURL: process.env.BASE_URL || 'https://ark.cn-beijing.volces.com/api/v3/bots',
 });
 
 app.post('/api/chat', async (req, res) => {
@@ -62,9 +62,9 @@ app.post('/api/chat', async (req, res) => {
 
 // 添加健康检查端点
 app.get('/health', (req, res) => {
-  res.json({ status: 'ok' });
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-app.listen(port, () => {
-  console.log(`代理服务器运行在 http://localhost:${port}`);
+app.listen(port, '0.0.0.0', () => {
+  console.log(`API服务器运行在 http://0.0.0.0:${port}`);
 }); 
